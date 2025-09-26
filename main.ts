@@ -1,12 +1,19 @@
 import 'reflect-metadata';
 import express from 'express';
 import weatherRouter from './src/routes/weather';
+import { initializeDB } from './src/database/database';
 
-const app = express();
-const port = 3000;
+async function main() {
+  const app = express();
+  await initializeDB();
+  
+  app.use('/weather', weatherRouter);
+  
+  app.listen(process.env.PORT, () => {
+    console.log(`Server is running at http://localhost:${process.env.PORT}`);
+  });
+}
 
-app.use('/weather', weatherRouter);
-
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+main().catch(err => {
+  console.error('Error starting the server:', err);
 });

@@ -1,25 +1,21 @@
-import { createClient, RedisClientType } from 'redis';
-import dotenv from 'dotenv';
+import { DataSource } from "typeorm"
 
-dotenv.config();
+const AppDataSource = new DataSource({
+    type: "postgres",
+    host: process.env.DB_HOST || "localhost",
+    port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 5432,
+    username: process.env.DB_USER || "postgres",
+    password: process.env.DB_PASSWORD || "password",
+    database:  process.env.DB_NAME || "weatherapp",
+    synchronize: true, // Set to true only in development
+    logging: true,
+})
 
-// Singleton pattern for Redis client
-declare global {
-  // eslint-disable-next-line no-var
-  var redisClient: RedisClientType | undefined;
-}
-
-const getRedisClient = () => {
-  if (!global.redisClient) {
-    global.redisClient = createClient({
-      url: `redis://${process.env.REDIS_HOST || 'localhost'}:6379`,
-    });
-    global.redisClient.on('error', (err) => {
-      console.error('Redis Client Error', err);
-    });
-    global.redisClient.connect().catch(console.error);
+export async function initializeDB(): Promise<void> {
+  try {
+      await AppDataSource.initialize()
+      console.log("Data Source has been initialized!")
+  } catch (error) {
+      console.error("Error during Data Source initialization", error)
   }
-  return global.redisClient;
-};
-
-export default getRedisClient;
+}

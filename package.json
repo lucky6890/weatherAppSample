@@ -4,7 +4,6 @@
   "description": "sample API for working with weather's data with nodeJS",
   "main": "main.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon main.ts"
   },
   "author": "m.j.a.lucky",
