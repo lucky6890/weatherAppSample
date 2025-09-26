@@ -1,0 +1,64 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# TypeScript
+dist/
+*.tsbuildinfo
+
+# Environment
+.env
+.env.*.local
+.env.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-workspace
+
+# Docker
+docker-compose.override.yml
+Dockerfile.dev
+docker-compose.*.yml
+
+# Postgres data (local dev)
+db_data/
+
+# Redis data
+redis_data/
+
+# Misc
+coverage/
+*.tgz
+.cache/
+
+# Build
+build/
+
+# Optional npm cache
+.npm
+
+# TypeORM
+ormconfig.json
+
+# Ignore compiled JS in source tree
+**/*.js
+**/*.js.map
+
+# Local env files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
