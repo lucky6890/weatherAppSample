@@ -3,7 +3,7 @@ import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
 @Entity()
 export class Weather {
     @PrimaryGeneratedColumn("uuid")
-    id!: number
+    id!: string
 
     @Column("varchar", { unique: true })
     cityName!: string
