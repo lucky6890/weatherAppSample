@@ -1,10 +1,12 @@
 import { Request, Response } from 'express';
+import { getWeather } from '../services/weather';
 
 class WeatherController {
-  public static getWeather(req: Request, res: Response): void {
-    console.log(req.body);
+  public static async getWeather(req: Request, res: Response): Promise<void> {
+    const city = req.query.city as string;
+    const data = await getWeather(city);
     res.send({
-      message: "hello there!!!"
+      data
     });
   }
 }

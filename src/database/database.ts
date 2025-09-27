@@ -23,3 +23,5 @@ export async function initializeDB(): Promise<void> {
       console.error("Error during Data Source initialization", error)
   }
 }
+
+export { AppDataSource };
