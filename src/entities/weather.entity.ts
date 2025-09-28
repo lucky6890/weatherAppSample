@@ -6,7 +6,7 @@ export class Weather {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  @Column("varchar", { unique: true })
+  @Column("varchar")
   @IsString()
   cityName!: string;
 
