@@ -1,5 +1,5 @@
-import { createClient, RedisClientType } from 'redis';
-import dotenv from 'dotenv';
+import { createClient, RedisClientType } from "redis";
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -8,12 +8,11 @@ declare global {
 }
 
 const getDefaultRedisUrl = () => {
-  const host = process.env.REDIS_HOST || 'localhost';
-  const port = process.env.REDIS_PORT || '6379';
+  const host = process.env.REDIS_HOST || "localhost";
+  const port = process.env.REDIS_PORT || "6379";
   if (process.env.REDIS_URL) return process.env.REDIS_URL;
   return `redis://${host}:${port}`;
 };
-
 
 export async function initializeRedisClient(): Promise<RedisClientType> {
   if (global.__redis_client__ && global.__redis_client__.isReady) {
@@ -23,12 +22,12 @@ export async function initializeRedisClient(): Promise<RedisClientType> {
   const url = getDefaultRedisUrl();
   const client: RedisClientType = createClient({ url });
 
-  client.on('error', (err: unknown) => {
-    console.error('Redis Client Error', err as any);
+  client.on("error", (err: unknown) => {
+    console.error("Redis Client Error", err as any);
   });
 
-  client.on('connect', () => {
-    console.error('Redis Client connected!');
+  client.on("connect", () => {
+    console.error("Redis Client connected!");
   });
 
   await client.connect();
@@ -41,12 +40,12 @@ export async function initializeRedisClient(): Promise<RedisClientType> {
         await global.__redis_client__.disconnect();
       }
     } catch (err) {
-      console.error('Error during Redis disconnect', err as any);
+      console.error("Error during Redis disconnect", err as any);
     }
   };
 
-  process.once('SIGINT', shutdown);
-  process.once('SIGTERM', shutdown);
+  process.once("SIGINT", shutdown);
+  process.once("SIGTERM", shutdown);
 
   return client;
 }

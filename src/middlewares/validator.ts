@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
-import { ClassConstructor, plainToInstance } from 'class-transformer';
-import { validate } from 'class-validator';
+import { Request, Response, NextFunction } from "express";
+import { ClassConstructor, plainToInstance } from "class-transformer";
+import { validate } from "class-validator";
 
 export default class RequestValidator {
   static validate = <T>(classInstance: ClassConstructor<T>) => {
@@ -14,9 +14,11 @@ export default class RequestValidator {
           rawErrors.push(...Object.values(errorItem.constraints ?? {}));
         }
 
-        const validationErrorText = 'Request validation failed!';
-        console.log('error found!', rawErrors);
-        res.status(400).send({ message: validationErrorText, errors: rawErrors });
+        const validationErrorText = "Request validation failed!";
+        console.log("error found!", rawErrors);
+        res
+          .status(400)
+          .send({ message: validationErrorText, errors: rawErrors });
         return;
       }
       next();

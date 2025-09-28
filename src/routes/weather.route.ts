@@ -1,9 +1,13 @@
-import { Router } from 'express';
-import WeatherController from '../controllers/weatherController';
-import RequestValidator from '../middlewares/validator';
-import CreateWeatherDataDTO from '../dtos/createWeatherData.dto';
+import { Router } from "express";
+import WeatherController from "../controllers/weather.controller";
+import RequestValidator from "../middlewares/validator";
+import CreateWeatherDataDTO from "../dtos/createWeatherData.dto";
+import WeatherRepository from "../repositories/weather.repository";
+import UpdateWeatherDataDTO from "../dtos/updateWeatherData.dto";
+import { rateLimiter } from "../middlewares/rateLimiter";
 
 const router = Router();
+const weatherController = new WeatherController(new WeatherRepository());
 
 /**
  * @swagger
@@ -68,7 +72,11 @@ const router = Router();
  *       500:
  *         description: Internal server error.
  */
-router.get('/', WeatherController.getWeathers);
+router.get(
+  "/",
+  rateLimiter({ endpoint: `get/weather`, limit: 5, ttl: 60 }),
+  (req, res) => weatherController.getWeathers(req, res)
+);
 
 /**
  * @swagger
@@ -141,20 +149,23 @@ router.get('/', WeatherController.getWeathers);
  *       500:
  *         description: Internal server error.
  */
-router.get('/:id', WeatherController.getWeatherById);
-
+router.get(
+  "/:id",
+  rateLimiter({ endpoint: `getById/weather`, limit: 30, ttl: 60 }),
+  (req, res) => weatherController.getWeatherById(req, res)
+);
 
 /**
  * @swagger
- * /weather/cityName/{city}:
+ * /weather/latest/{cityName}:
  *   get:
- *     summary: Retrieve weather data by city name
- *     description: Retrieve weather data from the database by city name.
+ *     summary: Retrieve latest weather data by city name
+ *     description: Retrieve latest weather data from the database by city name.
  *     tags:
  *       - Weather
  *     parameters:
  *       - in: path
- *         name: city
+ *         name: cityName
  *         required: true
  *         schema:
  *           type: string
@@ -214,9 +225,13 @@ router.get('/:id', WeatherController.getWeatherById);
  *       500:
  *         description: Internal server error.
  */
-router.get('/cityName/:city', WeatherController.getWeatherByCity);
+router.get(
+  "/latest/:cityName",
+  rateLimiter({ endpoint: `latest/weather`, limit: 30, ttl: 60 }),
+  (req, res) => weatherController.getLatestWeatherByCity(req, res)
+);
 
-/** 
+/**
  * @swagger
  * /weather:
  *   post:
@@ -292,6 +307,139 @@ router.get('/cityName/:city', WeatherController.getWeatherByCity);
  *       500:
  *         description: Internal server error.
  */
-router.post('/', RequestValidator.validate(CreateWeatherDataDTO) ,WeatherController.getWeatherFromSource);
+router.post(
+  "/",
+  rateLimiter({ endpoint: `post/weather`, limit: 1, ttl: 60 }),
+  RequestValidator.validate(CreateWeatherDataDTO),
+  (req, res) => weatherController.getWeatherFromSource(req, res)
+);
+
+/**
+ * @swagger
+ * /weather/{id}:
+ *   put:
+ *     summary: Update weather data by ID
+ *     description: Update existing weather data in the database by its unique ID.
+ *     tags:
+ *       - Weather
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: The unique identifier of the weather data to be updated.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               temperature:
+ *                 type: number
+ *                 format: float
+ *                 example: 290.15
+ *               description:
+ *                 type: string
+ *                 example: "clear sky"
+ *               humidity:
+ *                 type: integer
+ *                 example: 60
+ *               windSpeed:
+ *                 type: number
+ *                 format: float
+ *                 example: 3.5
+ *     responses:
+ *       200:
+ *         description: Weather data updated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Weather data updated successfully.
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       format: uuid
+ *                       example: "123e4567-e89b-12d3-a456-426614174000"
+ *                     cityName:
+ *                       type: string
+ *                       example: "London"
+ *                     country:
+ *                       type: string
+ *                       example: "GB"
+ *                     temperature:
+ *                       type: number
+ *                       format: float
+ *                       example: 290.15
+ *                     description:
+ *                       type: string
+ *                       example: "clear sky"
+ *                     humidity:
+ *                       type: integer
+ *                       example: 60
+ *                     windSpeed:
+ *                       type: number
+ *                       format: float
+ *                       example: 3.5
+ *       400:
+ *         description: Validation failed or weather data not found.
+ *       500:
+ *         description: Internal server error.
+ */
+router.put(
+  "/:id",
+  rateLimiter({ endpoint: `put/weather`, limit: 10, ttl: 60 }),
+  RequestValidator.validate(UpdateWeatherDataDTO),
+  (req, res) => weatherController.updateWeather(req, res)
+);
+
+/**
+ * @swagger
+ * /weather/{id}:
+ *   delete:
+ *     summary: Delete weather data by ID
+ *     description: Delete existing weather data from the database by its unique ID.
+ *     tags:
+ *       - Weather
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: The unique identifier of the weather data to be deleted.
+ *     responses:
+ *       200:
+ *         description: Weather data deleted successfully or not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Weather data deleted successfully.
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *       400:
+ *         description: ID parameter is required.
+ *       500:
+ *         description: Internal server error.
+ */
+router.delete(
+  "/:id",
+  rateLimiter({ endpoint: `delete/weather`, limit: 10, ttl: 60 }),
+  (req, res) => weatherController.deleteWeather(req, res)
+);
 
 export default router;
