@@ -3,7 +3,7 @@ import { AppDataSource } from "../database/database";
 import { getWeather } from "../externalServices/weather";
 import CreateWeatherDataDTO from "../dtos/createWeatherData.dto";
 import { validate } from "class-validator";
-import { Repository, UpdateResult } from "typeorm";
+import { Repository } from "typeorm";
 import UpdateWeatherDataDTO from "../dtos/updateWeatherData.dto";
 
 export default class WeatherRepository {
@@ -37,6 +37,9 @@ export default class WeatherRepository {
     weatherData: CreateWeatherDataDTO
   ): Promise<Weather | { message: string; errors: any[] }> {
     const data = await getWeather(weatherData.cityName, weatherData.country);
+    if ("message" in data) {
+      return data;
+    }
     const newRecord = AppDataSource.createEntityManager().create(Weather, {
       cityName: data.name,
       country: data.sys.country,
@@ -56,7 +59,7 @@ export default class WeatherRepository {
   async update(
     id: string,
     weatherData: Partial<UpdateWeatherDataDTO>
-  ): Promise<UpdateResult | { message: string; errors: any[] }> {
+  ): Promise<Weather | null | { message: string; errors: any[] }> {
     const data = await this.weatherRepo.findOneBy({ id });
     if (!data) {
       return { message: "Record not found", errors: [] };
@@ -69,8 +72,14 @@ export default class WeatherRepository {
     if (validated.length > 0) {
       return { message: "Validation failed", errors: validated };
     }
-    const weather = await this.weatherRepo.update(id, data);
-    return weather;
+    await this.weatherRepo.update(id, data);
+    const updatedData = await this.weatherRepo.findOneBy({ id });
+    if (updatedData) {
+      updatedData.updatedAt = new Date();
+      const newData = await this.weatherRepo.save(updatedData);
+      return newData;
+    }
+    return null;
   }
 
   async delete(

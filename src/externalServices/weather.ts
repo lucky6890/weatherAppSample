@@ -25,6 +25,9 @@ async function getCityLatLon(cityName: string, country: string) {
     throw new Error("Failed to fetch city data");
   }
   const json = await data.json();
+  if (json.length === 0) {
+    throw new Error("City not found");
+  }
   const client = getRedisClient();
   if (client) {
     await client.set(
@@ -54,8 +57,13 @@ async function getCachedCityData(cityName: string, country: string) {
 }
 
 export async function getWeather(cityName: string, country: string) {
-  const weatherData = await getWeatherDataByCity(cityName, country);
-  return weatherData;
+  try {
+    const weatherData = await getWeatherDataByCity(cityName, country);
+    return weatherData;
+  } catch (error: any) {
+    console.error("Error fetching weather data:", error);
+    return { message: "Error fetching weather data", errors: [error.message] };
+  }
 }
 
 export default {

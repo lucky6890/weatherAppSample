@@ -67,9 +67,11 @@ class WeatherController {
       return;
     }
     const data = await this.repository.update(req.params.id, req.body);
-    if ("message" in data) {
-      res.status(400).send(data);
-      return;
+    if (data !== null) {
+      if ("message" in data) {
+        res.status(400).send(data);
+        return;
+      }
     }
     res.send({
       message: "Weather data updated successfully.",

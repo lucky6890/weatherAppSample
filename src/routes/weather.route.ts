@@ -309,8 +309,8 @@ router.get(
  */
 router.post(
   "/",
-  rateLimiter({ endpoint: `post/weather`, limit: 1, ttl: 60 }),
   RequestValidator.validate(CreateWeatherDataDTO),
+  rateLimiter({ endpoint: `post/weather`, limit: 5, ttl: 60 }),
   (req, res) => weatherController.getWeatherFromSource(req, res)
 );
 

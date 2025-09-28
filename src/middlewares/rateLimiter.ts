@@ -8,9 +8,9 @@ interface RateLimiterOptions {
 }
 
 export const rateLimiter = (rule: RateLimiterOptions) => {
-  const redisClient = getRedisClient();
   const { endpoint, ttl, limit } = rule;
   return async (req: Request, res: Response, next: NextFunction) => {
+    const redisClient = getRedisClient();
     if (redisClient) {
       const redisId = `${endpoint}-${req.ip}`;
       const requests = await redisClient.incr(redisId);
