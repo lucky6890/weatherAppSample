@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import WeatherController from '../controllers/weatherController';
+import RequestValidator from '../middlewares/validator';
+import CreateWeatherDataDTO from '../dtos/createWeatherData.dto';
 
 const router = Router();
 
@@ -144,7 +146,7 @@ router.get('/:id', WeatherController.getWeatherById);
 
 /**
  * @swagger
- * /weather/{city}:
+ * /weather/cityName/{city}:
  *   get:
  *     summary: Retrieve weather data by city name
  *     description: Retrieve weather data from the database by city name.
@@ -212,7 +214,7 @@ router.get('/:id', WeatherController.getWeatherById);
  *       500:
  *         description: Internal server error.
  */
-router.get('/:city', WeatherController.getWeatherByCity);
+router.get('/cityName/:city', WeatherController.getWeatherByCity);
 
 /** 
  * @swagger
@@ -229,9 +231,12 @@ router.get('/:city', WeatherController.getWeatherByCity);
  *           schema:
  *             type: object
  *             properties:
- *               city:
+ *               cityName:
  *                 type: string
  *                 example: "London"
+ *               country:
+ *                 type: string
+ *                 example: "GB"
  *     responses:
  *       200:
  *         description: Weather data fetched from source and saved to database.
@@ -287,6 +292,6 @@ router.get('/:city', WeatherController.getWeatherByCity);
  *       500:
  *         description: Internal server error.
  */
-router.post('/', WeatherController.getWeatherFromSource);
+router.post('/', RequestValidator.validate(CreateWeatherDataDTO) ,WeatherController.getWeatherFromSource);
 
 export default router;
