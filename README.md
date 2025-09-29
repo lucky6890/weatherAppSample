@@ -89,8 +89,6 @@ OPENWEATHERMAP_API_KEY=your_generated_api_key_here
 
 The free tier has rate limits — check your account for details.
 
-for production set target property in `docker-compose.yml` file to `production` and for development mode set it to `development`
-
 ## Project structure
 
 ```plaintext
