@@ -49,6 +49,11 @@ This project includes a `docker-compose.yml` that brings up the API, Postgres an
 Before starting, create a local `.env` file (copy from `.env.example`) and set `OPENWEATHERMAP_API_KEY` there.
 
 ```bash
+# Install dependencies
+npm install
+```
+
+```bash
 # Build and start containers
 docker compose up --build
 ```
@@ -84,7 +89,7 @@ OPENWEATHERMAP_API_KEY=your_generated_api_key_here
 
 The free tier has rate limits — check your account for details.
 
-for production set environment to `production` and for development mode set it to `development`
+for production set target property in `docker-compose.yml` file to `production` and for development mode set it to `development`
 
 ## Project structure
 

@@ -2,7 +2,6 @@ services:
   weather_app:
     build:
       context: .
-      target: development
     container_name: weather_app_container
     ports:
       - "3000:3000"

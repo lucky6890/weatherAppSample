@@ -6,6 +6,18 @@ import weatherRouter from "./routes/weather.route";
 import { initializeDB } from "./database/database";
 import initializeRedisClient from "./database/redis";
 
+/**
+ * this configuration is set to development mode
+ * for production, please make sure to set synchronize to false
+ * and handle migrations properly.
+ * and change the dockerfile and docker-compose files accordingly.
+ * you can use multistage builds in dockerfile to optimize the image size.
+ * or you can use a different dockerfile for production.
+ * or you can use npx tsc to compile the typescript code to javascript and run the javascript code in production.
+ * also make sure to set the environment variables properly in production.
+ * the target of this project is creating an application to work properly and challenging some skills for development
+ */
+
 async function main() {
   const app = express();
   app.use(express.json());

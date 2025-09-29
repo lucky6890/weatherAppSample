@@ -1,5 +1,5 @@
 # Use official Node.js LTS image
-FROM node:22.18.0 AS builder
+FROM node:22.18.0
 
 # Set working directory
 WORKDIR /usr/src/app
@@ -12,18 +12,6 @@ RUN npm install
 
 # Copy the rest of the application code
 COPY . .
-
-FROM builder AS production
-# Build TypeScript files
-RUN npx tsc
-
-# Expose the port the app runs on
-EXPOSE 3000
-
-# Start the app
-CMD ["node", "dist/src/main.js"]
-
-FROM builder AS development
 
 EXPOSE 3000
 
