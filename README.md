@@ -38,6 +38,8 @@ npx tsc
 node dist/src/main.js
 ```
 
+### please making sure redis and postgresql is running on your machine and set the environment variables properly
+
 Visit http://localhost:3000 (or the port set in your `.env`)
 
 docker compose up --build
