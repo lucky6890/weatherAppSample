@@ -35,7 +35,7 @@ cp .env.example .env
 
 ```bash
 npx tsc
-node dist/main.js
+node dist/src/main.js
 ```
 
 Visit http://localhost:3000 (or the port set in your `.env`)
