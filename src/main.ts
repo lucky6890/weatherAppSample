@@ -2,9 +2,9 @@ import "reflect-metadata";
 import express from "express";
 import swaggerUi from "swagger-ui-express";
 import swaggerJsDoc from "swagger-jsdoc";
-import weatherRouter from "./src/routes/weather.route";
-import { initializeDB } from "./src/database/database";
-import initializeRedisClient from "./src/database/redis";
+import weatherRouter from "./routes/weather.route";
+import { initializeDB } from "./database/database";
+import initializeRedisClient from "./database/redis";
 
 async function main() {
   const app = express();

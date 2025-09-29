@@ -4,7 +4,7 @@
   "description": "sample API for working with weather's data with nodeJS",
   "main": "main.ts",
   "scripts": {
-    "dev": "nodemon main.ts"
+    "dev": "nodemon ./src/main.ts"
   },
   "author": "m.j.a.lucky",
   "license": "ISC",

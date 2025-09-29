@@ -25,6 +25,9 @@ const weatherController = new WeatherController(new WeatherRepository());
  *             schema:
  *               type: object
  *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
  *                 message:
  *                   type: string
  *                   example: All weather data fetched
@@ -102,6 +105,9 @@ router.get(
  *             schema:
  *               type: object
  *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
  *                 message:
  *                   type: string
  *                   example: Weather data fetched by ID
@@ -144,7 +150,7 @@ router.get(
  *                       type: string
  *                       format: date-time
  *                       example: "2023-10-01T12:34:56Z"
- *       404:
+ *       400:
  *         description: Weather data not found.
  *       500:
  *         description: Internal server error.
@@ -178,6 +184,9 @@ router.get(
  *             schema:
  *               type: object
  *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
  *                 message:
  *                   type: string
  *                   example: Weather data fetched by city
@@ -220,7 +229,7 @@ router.get(
  *                       type: string
  *                       format: date-time
  *                       example: "2023-10-01T12:34:56Z"
- *       404:
+ *       400:
  *         description: Weather data not found.
  *       500:
  *         description: Internal server error.
@@ -260,6 +269,9 @@ router.get(
  *             schema:
  *               type: object
  *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
  *                 message:
  *                   type: string
  *                   example: Weather data fetched from source and saved to database.
@@ -302,8 +314,6 @@ router.get(
  *                       type: string
  *                       format: date-time
  *                       example: "2023-10-01T12:34:56Z"
- *       400:
- *         description: City weather data already exists in the database.
  *       500:
  *         description: Internal server error.
  */
@@ -359,6 +369,9 @@ router.post(
  *             schema:
  *               type: object
  *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
  *                 message:
  *                   type: string
  *                   example: Weather data updated successfully.
